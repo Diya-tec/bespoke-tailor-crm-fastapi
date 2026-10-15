@@ -1,0 +1,35 @@
+## 🗄️ Database Architecture
+
+### Connection Details (`database.py`)
+| Parameter | Value | Description |
+| :--- | :--- | :--- |
+| **RDBMS** | MySQL | Relational Database Management System |
+| **Driver** | `pymysql` | Pure-Python MySQL client library |
+| **Host & Port** | `localhost:3306` | Local database server endpoint |
+| **Database Name** | `project` | Target database schema |
+| **Table Name** | `cloths` | Primary ORM table for customer measurements |
+
+### Table Schema (`models.py`)
+| Column Name | SQLAlchemy Type | Pydantic Type | Constraints | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `Integer` | `int` | `PRIMARY KEY` | Auto-incrementing unique customer ID |
+| `name` | `String(100)` | `str` | `NOT NULL` | Customer's full name |
+| `phno` | `BigInteger` / `Integer` | `int` | `UNIQUE`, `NOT NULL` | 10-digit customer phone number |
+| `shirt_shoulder` | `Integer` | `int` | `NULLABLE` | Shirt shoulder width measurement |
+| `shirt_length` | `Integer` | `int` | `NULLABLE` | Full shirt length measurement |
+| `shirt_hand` | `String(25)` | `str` | `NULLABLE` | Sleeve length/style (e.g., `Full Hand`, `Forearm-length`) |
+| `pants_length` | `Integer` | `int` | `NULLABLE` | Trouser outseam length |
+| `pants_style` | `String(100)` | `str` | `NULLABLE` | Trouser fit style (e.g., `Ankle Fit`, `Regular`) |
+| `pants_waist` | `Integer` | `int` | `NULLABLE` | Trouser waist size |
+
+---
+
+## 🔌 REST API Reference (`main.py`)
+
+| HTTP Method | Endpoint | Function Name | Request Body (`schemas.py`) | Response Model | Status Codes | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/users` | `create_user()` | `UserCreate` (JSON) | `UserResponse` | `200 OK`, `422 Unprocessable Entity` | Creates a new customer measurement record |
+| `GET` | `/users` | `get_user()` | *None* | `list[UserCreate]` | `200 OK` | Fetches a list of all customer measurement records |
+| `GET` | `/users/{user_id}` | `get_user()` | *None* (Path Param: `user_id`) | `UserResponse` | `200 OK`, `404 Not Found` | Fetches a specific customer's record by their `id` |
+| `PUT` | `/users/{user_id}` | `update()` | `UserCreate` (JSON) | `UserResponse` | `200 OK`, `404 Not Found`, `422` | Updates an existing customer's record by `id` |
+| `DELETE` | `/users/{user_id}` | `delete()` | *None* (Path Param: `user_id`) | JSON Message | `200 OK`, `404 Not Found` | Permanently deletes a customer's record by `id` |
